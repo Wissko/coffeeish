@@ -58,7 +58,7 @@ export default function Home() {
 
       {/* ═══ Hero — video background ═══ */}
       <section className="relative h-screen min-h-[600px] flex items-end overflow-hidden">
-        {/* Video on mobile/tablet (portrait video works great) */}
+        {/* Video on mobile/tablet — single portrait video */}
         <video
           autoPlay
           muted
@@ -68,15 +68,27 @@ export default function Home() {
         >
           <source src="/hero-video.mp4" type="video/mp4" />
         </video>
-        {/* Static image on desktop (video is portrait, gets blurry on wide screens) */}
-        <Image
-          src="/images/storefront.jpg"
-          alt="CoffeeIsh storefront"
-          fill
-          className="object-cover hidden lg:block"
-          priority
-          quality={95}
-        />
+        {/* Desktop — two portrait videos side by side to fill landscape */}
+        <div className="absolute inset-0 hidden lg:flex">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-1/2 h-full object-cover"
+          >
+            <source src="/hero-video.mp4" type="video/mp4" />
+          </video>
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-1/2 h-full object-cover"
+          >
+            <source src="/hero-video.mp4" type="video/mp4" />
+          </video>
+        </div>
 
         {/* Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-noir/80 via-noir/30 to-noir/10" />
