@@ -58,25 +58,24 @@ export default function Home() {
 
       {/* ═══ Hero — video background ═══ */}
       <section className="relative h-screen min-h-[600px] flex items-end overflow-hidden">
-        {/* Video background */}
+        {/* Video on mobile/tablet (portrait video works great) */}
         <video
           autoPlay
           muted
           loop
           playsInline
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover lg:hidden"
         >
           <source src="/hero-video.mp4" type="video/mp4" />
-          {/* Fallback to static image */}
         </video>
-        {/* Fallback image behind video */}
+        {/* Static image on desktop (video is portrait, gets blurry on wide screens) */}
         <Image
           src="/images/storefront.jpg"
           alt="CoffeeIsh storefront"
           fill
-          className="object-cover -z-10"
+          className="object-cover hidden lg:block"
           priority
-          quality={90}
+          quality={95}
         />
 
         {/* Overlay */}
