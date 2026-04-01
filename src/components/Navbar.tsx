@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -13,6 +14,11 @@ const navLinks = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+
+  // On inner pages, always use dark colors (cream background)
+  const useDark = !isHome || scrolled;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -39,13 +45,13 @@ export default function Navbar() {
           <Link href="/" className="group flex items-baseline gap-0.5">
             <span
               className="font-serif text-xl md:text-2xl font-semibold tracking-[0.08em] uppercase transition-colors duration-500"
-              style={{ color: scrolled ? "#1A1A1A" : "#F5E6D3" }}
+              style={{ color: useDark ? "#1A1A1A" : "#F5E6D3" }}
             >
               Coffee
             </span>
             <span
               className="font-serif text-lg md:text-xl font-light italic transition-colors duration-500"
-              style={{ color: scrolled ? "#996666" : "#C4954A" }}
+              style={{ color: useDark ? "#996666" : "#C4954A" }}
             >
               Ish
             </span>
@@ -63,7 +69,7 @@ export default function Navbar() {
             px-2 h-11
             rounded-full
             border transition-all duration-700
-            ${scrolled
+            ${useDark
               ? "bg-cream/80 border-dusty-rose/12 shadow-[0_4px_24px_rgba(26,26,26,0.06)]"
               : "bg-noir/15 border-cream/8 shadow-[0_4px_20px_rgba(0,0,0,0.12)]"
             }
@@ -75,7 +81,7 @@ export default function Navbar() {
               key={link.href}
               href={link.href}
               className="relative text-[12px] font-sans font-medium tracking-[0.16em] uppercase px-5 py-2 rounded-full transition-all duration-300 group"
-              style={{ color: scrolled ? "rgba(26,26,26,0.6)" : "rgba(245,230,211,0.7)" }}
+              style={{ color: useDark ? "rgba(26,26,26,0.6)" : "rgba(245,230,211,0.7)" }}
             >
               <span className="relative z-10 group-hover:text-dusty-rose transition-colors duration-300">
                 {link.label}
@@ -99,7 +105,7 @@ export default function Navbar() {
           <motion.span
             animate={mobileOpen
               ? { rotate: 45, y: 7, backgroundColor: "#1A1A1A" }
-              : { rotate: 0, y: 0, backgroundColor: scrolled ? "#1A1A1A" : "#F5E6D3" }
+              : { rotate: 0, y: 0, backgroundColor: useDark ? "#1A1A1A" : "#F5E6D3" }
             }
             transition={{ duration: 0.3 }}
             className="block w-6 h-[1.5px] origin-center"
@@ -108,12 +114,12 @@ export default function Navbar() {
             animate={mobileOpen ? { opacity: 0 } : { opacity: 1 }}
             transition={{ duration: 0.2 }}
             className="block w-6 h-[1.5px]"
-            style={{ backgroundColor: scrolled ? "#1A1A1A" : "#F5E6D3" }}
+            style={{ backgroundColor: useDark ? "#1A1A1A" : "#F5E6D3" }}
           />
           <motion.span
             animate={mobileOpen
               ? { rotate: -45, y: -7, backgroundColor: "#1A1A1A" }
-              : { rotate: 0, y: 0, backgroundColor: scrolled ? "#1A1A1A" : "#F5E6D3" }
+              : { rotate: 0, y: 0, backgroundColor: useDark ? "#1A1A1A" : "#F5E6D3" }
             }
             transition={{ duration: 0.3 }}
             className="block w-6 h-[1.5px] origin-center"
