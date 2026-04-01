@@ -2,10 +2,37 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import FadeIn from "@/components/FadeIn";
 import InfiniteCarousel from "@/components/InfiniteCarousel";
+
+const ScrollStage = dynamic(() => import("@/components/ScrollStage"), { ssr: false });
+
+const stageSlides = [
+  {
+    image: "/images/exterior-life.jpg",
+    label: "The story",
+    title: "Strong, smooth and just the way you like it",
+    subtitle:
+      "Tucked into the heart of South Brisbane\u2019s buzzing Fish Lane. Specialty coffee from local roasters, artisan pastries and food crafted with intention.",
+  },
+  {
+    image: "/images/pistachio-croissant.jpg",
+    label: "The craft",
+    title: "European technique, Australian soul",
+    subtitle:
+      "From laminated pastries to house-baked focaccia. Every item crafted in-house, daily.",
+  },
+  {
+    image: "/images/food-cabinet.jpg",
+    label: "The place",
+    title: "First on Fish Lane",
+    subtitle:
+      "Where food, art and community collide. Street art, sculpture, galleries and the creative energy of South Brisbane.",
+  },
+];
 
 const galleryImages = [
   { src: "/images/latte-art.jpg", alt: "Latte art rosetta" },
@@ -19,9 +46,8 @@ export default function Home() {
     <>
       <Navbar />
 
-      {/* ═══ Hero — blurred background wallpaper ═══ */}
+      {/* ═══ Hero — blurred wallpaper ═══ */}
       <section className="relative h-screen min-h-[600px] flex items-end overflow-hidden">
-        {/* Background image — always blurred like a wallpaper */}
         <div className="absolute inset-0 scale-110">
           <Image
             src="/images/storefront.jpg"
@@ -32,11 +58,8 @@ export default function Home() {
             quality={90}
           />
         </div>
-
-        {/* Dark gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-noir/85 via-noir/40 to-noir/20" />
 
-        {/* Hero content */}
         <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 pb-16 md:pb-24 w-full">
           <FadeIn delay={0.3}>
             <p className="text-xs font-sans font-medium tracking-[0.28em] uppercase text-cream/50 mb-4">
@@ -66,57 +89,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ Intro section ═══ */}
-      <section className="py-24 md:py-36">
-        <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
-            <FadeIn>
-              <div>
-                <p className="text-xs font-sans font-medium tracking-[0.28em] uppercase text-dusty-rose mb-6">
-                  The story
-                </p>
-                <h2 className="font-serif text-4xl md:text-5xl font-light text-noir leading-[1.1] mb-8">
-                  Strong, smooth and
-                  <br />
-                  <span className="italic">just the way you like it</span>
-                </h2>
-                <p className="font-sans text-base text-noir/55 leading-relaxed max-w-md">
-                  Tucked into the heart of South Brisbane&apos;s buzzing Fish Lane,
-                  this little spot delivers the goods. Specialty coffee from local
-                  roasters, artisan pastries and food crafted with intention.
-                </p>
-                <p className="font-sans text-base text-noir/55 leading-relaxed max-w-md mt-4">
-                  The first to open on this stretch of Fish Lane. A place where coffee
-                  culture meets the energy of one of Brisbane&apos;s most creative precincts.
-                </p>
-              </div>
-            </FadeIn>
-            <FadeIn delay={0.2}>
-              <div className="relative aspect-[4/5] overflow-hidden">
-                <Image
-                  src="/images/exterior-life.jpg"
-                  alt="CoffeeIsh exterior with customers enjoying the Fish Lane atmosphere"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                />
-              </div>
-            </FadeIn>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ Photo break — full bleed ═══ */}
-      <section className="relative h-[50vh] md:h-[65vh] overflow-hidden">
-        <Image
-          src="/images/pistachio-croissant.jpg"
-          alt="Pistachio croissant with rose petals"
-          fill
-          className="object-cover"
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 bg-noir/8" />
-      </section>
+      {/* ═══ SVG Mask Scroll Transitions ═══ */}
+      <ScrollStage slides={stageSlides} />
 
       {/* ═══ Features ═══ */}
       <section className="py-24 md:py-36 bg-noir text-cream">
