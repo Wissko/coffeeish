@@ -15,66 +15,68 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => setScrolled(window.scrollY > 60);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Lock body scroll when mobile menu is open
   useEffect(() => {
-    if (mobileOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [mobileOpen]);
 
   return (
     <>
-      <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${
-          scrolled
-            ? "bg-cream/92 backdrop-blur-xl shadow-[0_1px_0_0_rgba(153,102,102,0.15)]"
-            : "bg-transparent"
-        }`}
-      >
-        <div className="max-w-7xl mx-auto px-6 md:px-10 flex items-center justify-between h-18 md:h-24">
-          {/* Logo — larger, more distinctive */}
-          <Link href="/" className="group relative">
-            <div className="flex flex-col items-center leading-none py-2">
-              <span className="font-serif text-2xl md:text-3xl font-bold tracking-[0.12em] uppercase transition-colors duration-500 group-hover:text-dusty-rose"
-                style={{ color: scrolled ? "#1A1A1A" : "#F5E6D3" }}
-              >
-                Coffee
-              </span>
-              <span className="font-serif text-xl md:text-2xl font-light italic transition-colors duration-500"
-                style={{ color: scrolled ? "#996666" : "#C4954A" }}
-              >
-                Ish
-              </span>
-            </div>
+      {/* Centered floating pill navbar */}
+      <div className="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-[92vw] max-w-2xl">
+        <motion.nav
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 1, 0.5, 1] as [number, number, number, number] }}
+          className={`
+            relative flex items-center justify-between
+            px-5 md:px-7 h-14 md:h-16
+            rounded-full
+            border transition-all duration-700
+            ${scrolled
+              ? "bg-cream/80 border-dusty-rose/15 shadow-[0_8px_32px_rgba(26,26,26,0.08),0_2px_8px_rgba(153,102,102,0.06)]"
+              : "bg-noir/20 border-cream/10 shadow-[0_8px_32px_rgba(0,0,0,0.15)]"
+            }
+            backdrop-blur-2xl backdrop-saturate-150
+          `}
+        >
+          {/* Logo */}
+          <Link href="/" className="group flex items-baseline gap-0.5 shrink-0">
+            <span
+              className="font-serif text-lg md:text-xl font-semibold tracking-[0.08em] uppercase transition-colors duration-500"
+              style={{ color: scrolled ? "#1A1A1A" : "#F5E6D3" }}
+            >
+              Coffee
+            </span>
+            <span
+              className="font-serif text-base md:text-lg font-light italic transition-colors duration-500"
+              style={{ color: scrolled ? "#996666" : "#C4954A" }}
+            >
+              Ish
+            </span>
           </Link>
 
-          {/* Golden separator + Desktop links */}
-          <div className="hidden md:flex items-center gap-0">
-            {/* Separator doré */}
-            <div
-              className="w-px h-8 mr-10 transition-colors duration-500"
-              style={{ backgroundColor: scrolled ? "rgba(196,149,74,0.4)" : "rgba(196,149,74,0.3)" }}
-            />
+          {/* Desktop links */}
+          <div className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="relative text-sm font-sans font-medium tracking-[0.18em] uppercase px-5 py-2 transition-colors duration-500 group"
-                style={{ color: scrolled ? "rgba(26,26,26,0.7)" : "rgba(245,230,211,0.8)" }}
+                className="relative text-[13px] font-sans font-medium tracking-[0.16em] uppercase px-4 py-2 rounded-full transition-all duration-300 group"
+                style={{ color: scrolled ? "rgba(26,26,26,0.65)" : "rgba(245,230,211,0.75)" }}
               >
                 <span className="relative z-10 group-hover:text-dusty-rose transition-colors duration-300">
                   {link.label}
                 </span>
-                {/* Animated underline */}
-                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-[1.5px] bg-dore-caramel group-hover:w-3/4 transition-all duration-500 ease-out" />
+                {/* Hover pill background */}
+                <span className={`absolute inset-0 rounded-full scale-90 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-300 ${
+                  scrolled ? "bg-dusty-rose/8" : "bg-cream/10"
+                }`} />
               </Link>
             ))}
           </div>
@@ -91,12 +93,12 @@ export default function Navbar() {
                 : { rotate: 0, y: 0, backgroundColor: scrolled ? "#1A1A1A" : "#F5E6D3" }
               }
               transition={{ duration: 0.3 }}
-              className="block w-7 h-[1.5px] origin-center"
+              className="block w-6 h-[1.5px] origin-center"
             />
             <motion.span
-              animate={mobileOpen ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
+              animate={mobileOpen ? { opacity: 0 } : { opacity: 1 }}
               transition={{ duration: 0.2 }}
-              className="block w-7 h-[1.5px]"
+              className="block w-6 h-[1.5px]"
               style={{ backgroundColor: scrolled ? "#1A1A1A" : "#F5E6D3" }}
             />
             <motion.span
@@ -105,113 +107,60 @@ export default function Navbar() {
                 : { rotate: 0, y: 0, backgroundColor: scrolled ? "#1A1A1A" : "#F5E6D3" }
               }
               transition={{ duration: 0.3 }}
-              className="block w-7 h-[1.5px] origin-center"
+              className="block w-6 h-[1.5px] origin-center"
             />
           </button>
-        </div>
+        </motion.nav>
+      </div>
 
-        {/* Dusty rose accent line when scrolled */}
-        <motion.div
-          className="absolute bottom-0 left-0 right-0 h-[1px]"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: scrolled ? 1 : 0 }}
-          transition={{ duration: 0.5 }}
-          style={{
-            background: "linear-gradient(90deg, transparent, rgba(153,102,102,0.3) 20%, rgba(196,149,74,0.2) 50%, rgba(153,102,102,0.3) 80%, transparent)",
-          }}
-        />
-      </nav>
-
-      {/* Mobile menu — fullscreen spectacular */}
+      {/* Mobile fullscreen menu */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-            className="fixed inset-0 z-40 flex flex-col items-center justify-center overflow-hidden"
+            transition={{ duration: 0.4 }}
+            className="fixed inset-0 z-40 flex flex-col items-center justify-center"
             style={{ backgroundColor: "#F5E6D3" }}
           >
-            {/* Decorative background elements */}
             <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 0.04 }}
-              exit={{ scale: 0.8, opacity: 0 }}
+              initial={{ scale: 0.6, opacity: 0 }}
+              animate={{ scale: 1, opacity: 0.03 }}
+              exit={{ scale: 0.6, opacity: 0 }}
               transition={{ duration: 0.8 }}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full"
-              style={{ backgroundColor: "#996666" }}
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] rounded-full bg-dusty-rose"
             />
 
-            {/* Top decorative line */}
-            <motion.div
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: 1 }}
-              exit={{ scaleX: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="absolute top-28 left-1/2 -translate-x-1/2 w-12 h-[1px] bg-dore-caramel"
-            />
-
-            {/* Logo in mobile menu */}
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.4 }}
-              className="absolute top-6 left-6"
-            >
-              <div className="flex flex-col items-center leading-none py-2">
-                <span className="font-serif text-2xl font-bold tracking-[0.12em] uppercase text-noir">
-                  Coffee
-                </span>
-                <span className="font-serif text-xl font-light italic text-dusty-rose">
-                  Ish
-                </span>
-              </div>
-            </motion.div>
-
-            {/* Navigation links */}
-            <div className="flex flex-col items-center gap-2">
+            <div className="flex flex-col items-center gap-3">
               {navLinks.map((link, i) => (
                 <motion.div
                   key={link.href}
-                  initial={{ opacity: 0, y: 40 }}
+                  initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 20 }}
-                  transition={{
-                    duration: 0.5,
-                    delay: i * 0.1 + 0.15,
-                    ease: [0.25, 1, 0.5, 1] as [number, number, number, number],
-                  }}
+                  exit={{ opacity: 0, y: 15 }}
+                  transition={{ duration: 0.4, delay: i * 0.08 + 0.1, ease: [0.25, 1, 0.5, 1] as [number, number, number, number] }}
                 >
                   <Link
                     href={link.href}
                     onClick={() => setMobileOpen(false)}
-                    className="group relative font-serif text-5xl font-light text-noir py-3 block"
+                    className="font-serif text-5xl font-light text-noir py-3 block active:text-dusty-rose transition-colors"
                   >
-                    <span className="relative z-10 group-active:text-dusty-rose transition-colors duration-300">
-                      {link.label}
-                    </span>
-                    <span className="absolute -bottom-1 left-0 w-full h-[1px] bg-dore-caramel/30 scale-x-0 group-active:scale-x-100 transition-transform duration-300 origin-left" />
+                    {link.label}
                   </Link>
                 </motion.div>
               ))}
             </div>
 
-            {/* Bottom info */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ delay: 0.5, duration: 0.4 }}
-              className="absolute bottom-12 flex flex-col items-center gap-3"
+              transition={{ delay: 0.4 }}
+              className="absolute bottom-14 flex flex-col items-center gap-2"
             >
-              <div className="w-8 h-[1px] bg-dore-caramel/40" />
-              <p className="text-xs font-sans text-noir/30 tracking-[0.3em] uppercase">
+              <div className="w-8 h-px bg-dore-caramel/30" />
+              <p className="text-[11px] font-sans text-noir/25 tracking-[0.25em] uppercase">
                 Fish Lane, South Brisbane
-              </p>
-              <p className="text-xs font-sans text-noir/25 tracking-[0.2em] uppercase">
-                ESTD 2025
               </p>
             </motion.div>
           </motion.div>
