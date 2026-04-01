@@ -10,7 +10,7 @@ import FadeIn from "@/components/FadeIn";
 import TextReveal from "@/components/TextReveal";
 import LineExpand from "@/components/LineExpand";
 import InfiniteCarousel from "@/components/InfiniteCarousel";
-import SmoothScroll from "@/components/SmoothScroll";
+
 
 const galleryImages = [
   { src: "/images/latte-art.jpg", alt: "Latte art rosetta" },
@@ -54,7 +54,6 @@ function CounterNum({ num, delay = 0 }: { num: string; delay?: number }) {
 export default function Home() {
   return (
     <>
-      <SmoothScroll />
       <Navbar />
 
       {/* ═══ Hero — video background ═══ */}

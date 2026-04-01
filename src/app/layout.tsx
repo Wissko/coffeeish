@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant, DM_Sans } from "next/font/google";
 import "./globals.css";
+import ClientLayout from "@/components/ClientLayout";
 
 const cormorant = Cormorant({
   subsets: ["latin"],
@@ -28,6 +29,31 @@ export const metadata: Metadata = {
     "artisan food",
     "pastries",
   ],
+  openGraph: {
+    title: "CoffeeIsh | Fish Lane, South Brisbane",
+    description: "Specialty coffee & artisan food. Pours perfection in every cup.",
+    type: "website",
+    locale: "en_AU",
+    url: "https://coffeeish.vercel.app",
+    siteName: "CoffeeIsh",
+    images: [
+      {
+        url: "/images/storefront.jpg",
+        width: 1200,
+        height: 630,
+        alt: "CoffeeIsh storefront on Fish Lane",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "CoffeeIsh | Fish Lane, South Brisbane",
+    description: "Specialty coffee & artisan food. Pours perfection in every cup.",
+    images: ["/images/storefront.jpg"],
+  },
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({
@@ -38,7 +64,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${cormorant.variable} ${dmSans.variable}`}>
       <body className="font-sans bg-cream text-noir antialiased">
-        {children}
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );
