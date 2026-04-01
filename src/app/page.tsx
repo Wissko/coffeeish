@@ -90,11 +90,17 @@ export default function Home() {
           </video>
         </div>
 
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-noir/80 via-noir/30 to-noir/10" />
+        {/* Thin divider between the two videos on desktop */}
+        <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-px bg-cream/10 hidden lg:block z-[1]" />
+
+        {/* Frosted glass overlay — dépoli effect */}
+        <div className="absolute inset-0 backdrop-blur-[3px] bg-noir/20 z-[1]" />
+
+        {/* Gradient overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-noir/85 via-noir/20 to-transparent z-[2]" />
 
         {/* Content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 pb-16 md:pb-24 w-full">
+        <div className="relative z-[3] max-w-7xl mx-auto px-6 md:px-10 pb-16 md:pb-24 w-full">
           <FadeIn delay={0.3}>
             <p className="text-[11px] font-sans font-medium tracking-[0.35em] uppercase text-cream/45 mb-6">
               Specialty coffee & artisan food
