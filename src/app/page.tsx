@@ -93,8 +93,9 @@ export default function Home() {
         {/* Thin divider between the two videos on desktop */}
         <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-px bg-cream/10 hidden lg:block z-[1]" />
 
-        {/* Frosted glass overlay — subtle on mobile, heavy luxury on desktop */}
-        <div className="absolute inset-0 backdrop-blur-[2px] lg:backdrop-blur-[12px] bg-noir/20 lg:bg-noir/35 z-[1]" />
+        {/* Film grain + vignette overlay */}
+        <div className="absolute inset-0 z-[1] pointer-events-none hero-grain" />
+        <div className="absolute inset-0 z-[1] pointer-events-none" style={{background: "radial-gradient(ellipse at center, transparent 30%, rgba(26,26,26,0.75) 80%, rgba(26,26,26,0.95) 100%)"}} />
 
         {/* Gradient overlay for text readability */}
         <div className="absolute inset-0 bg-gradient-to-t from-noir/85 via-noir/20 to-transparent z-[2]" />
