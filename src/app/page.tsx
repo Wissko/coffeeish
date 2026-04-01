@@ -48,17 +48,17 @@ export default function Home() {
 
       {/* ═══ Hero — blurred wallpaper ═══ */}
       <section className="relative h-screen min-h-[600px] flex items-end overflow-hidden">
-        <div className="absolute inset-0 scale-110">
+        <div className="absolute inset-0 scale-[1.03]">
           <Image
             src="/images/storefront.jpg"
             alt="CoffeeIsh storefront on Fish Lane, South Brisbane"
             fill
-            className="object-cover blur-[6px]"
+            className="object-cover blur-[2px]"
             priority
-            quality={90}
+            quality={95}
           />
         </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-noir/85 via-noir/40 to-noir/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-noir/80 via-noir/30 to-noir/10" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 pb-16 md:pb-24 w-full">
           <FadeIn delay={0.3}>
