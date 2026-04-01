@@ -59,21 +59,25 @@ export default function InfiniteCarousel({ images }: InfiniteCarouselProps) {
           const childCenter = rect.left + rect.width / 2;
           const distance = Math.abs(childCenter - containerCenter);
 
-          // ~2 images visible clearly, then blur kicks in
-          const clearZone = itemWidth * 1.8;
-          const normalized = Math.max(0, (distance - clearZone) / (window.innerWidth * 0.35));
-          const clamped = Math.min(normalized, 1);
+          // Arc applies to ALL items based on distance from center (no clear zone for the arc)
+          const maxDist = window.innerWidth * 0.55;
+          const arcNorm = Math.min(distance / maxDist, 1);
 
-          // Blur: 0 in clear zone → 6px at edges
-          const blur = clamped * 6;
-          // Scale: 1 → 0.85 at edges
-          const scale = 1 - clamped * 0.15;
-          // Opacity: 1 → 0.3 at edges
-          const opacity = 1 - clamped * 0.7;
-          // Y offset: strong arc — items curve down toward edges
-          const yOffset = clamped * clamped * 55; // px, quadratic for smooth deep curve
-          // Rotation: pronounced tilt toward edges
-          const rotateY = clamped * 25 * (childCenter < containerCenter ? 1 : -1); // degrees
+          // Clear zone only for blur/opacity
+          const clearZone = itemWidth * 1.6;
+          const blurNorm = Math.max(0, (distance - clearZone) / (window.innerWidth * 0.3));
+          const blurClamped = Math.min(blurNorm, 1);
+
+          // Blur: 0 in clear zone → 7px at edges
+          const blur = blurClamped * 7;
+          // Scale: 1 at center → 0.78 at edges
+          const scale = 1 - arcNorm * 0.22;
+          // Opacity: 1 → 0.2 at edges
+          const opacity = 1 - blurClamped * 0.8;
+          // Y offset: visible arc on ALL items — quadratic curve, up to 90px
+          const yOffset = arcNorm * arcNorm * 90;
+          // Rotation: pronounced perspective tilt, up to 35°
+          const rotateY = arcNorm * 35 * (childCenter < containerCenter ? 1 : -1);
 
           const imgWrapper = child.querySelector("[data-carousel-img]") as HTMLElement;
           if (imgWrapper) {
