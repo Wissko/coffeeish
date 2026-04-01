@@ -70,10 +70,10 @@ export default function InfiniteCarousel({ images }: InfiniteCarouselProps) {
           const scale = 1 - clamped * 0.15;
           // Opacity: 1 → 0.3 at edges
           const opacity = 1 - clamped * 0.7;
-          // Y offset: subtle arc — items curve down toward edges (10-15%)
-          const yOffset = clamped * clamped * 30; // px, quadratic for smooth curve
-          // Rotation: subtle tilt toward edges
-          const rotateY = clamped * 12 * (childCenter < containerCenter ? 1 : -1); // degrees
+          // Y offset: strong arc — items curve down toward edges
+          const yOffset = clamped * clamped * 55; // px, quadratic for smooth deep curve
+          // Rotation: pronounced tilt toward edges
+          const rotateY = clamped * 25 * (childCenter < containerCenter ? 1 : -1); // degrees
 
           const imgWrapper = child.querySelector("[data-carousel-img]") as HTMLElement;
           if (imgWrapper) {
@@ -118,7 +118,7 @@ export default function InfiniteCarousel({ images }: InfiniteCarouselProps) {
           >
             <div
               data-carousel-img
-              className="relative overflow-hidden rounded-sm"
+              className="relative overflow-hidden rounded-2xl"
               style={{ aspectRatio: "3/4", transformOrigin: "center bottom" }}
             >
               <Image
