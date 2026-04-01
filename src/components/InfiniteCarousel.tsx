@@ -17,42 +17,39 @@ export default function InfiniteCarousel({ images }: InfiniteCarouselProps) {
   const animRef = useRef<number>(0);
   const posRef = useRef(0);
   const [itemWidth, setItemWidth] = useState(0);
-  const speedRef = useRef(0.5); // px per frame
 
-  // Triple the images for seamless loop
+  // Triple images for seamless loop
   const tripled = [...images, ...images, ...images];
-  const singleSetWidth = images.length * (itemWidth || 300);
+  const gap = 14;
 
   useEffect(() => {
     const updateWidth = () => {
       const vw = window.innerWidth;
-      // On mobile: ~80vw per item, tablet: ~45vw, desktop: ~30vw
-      if (vw < 640) setItemWidth(vw * 0.75);
-      else if (vw < 1024) setItemWidth(vw * 0.4);
-      else setItemWidth(Math.min(vw * 0.28, 420));
+      // Smaller items so ~2 are fully visible before blur zone
+      if (vw < 640) setItemWidth(vw * 0.42);
+      else if (vw < 1024) setItemWidth(vw * 0.26);
+      else setItemWidth(Math.min(vw * 0.18, 260));
     };
     updateWidth();
     window.addEventListener("resize", updateWidth);
     return () => window.removeEventListener("resize", updateWidth);
   }, []);
 
+  const singleSetWidth = images.length * ((itemWidth || 200) + gap);
+
   useEffect(() => {
     if (!itemWidth || !trackRef.current) return;
 
     const animate = () => {
-      posRef.current -= speedRef.current;
+      posRef.current -= 0.4; // Slow, elegant speed
 
-      // Reset when we've scrolled past one full set
       if (Math.abs(posRef.current) >= singleSetWidth) {
         posRef.current += singleSetWidth;
       }
 
       if (trackRef.current) {
         trackRef.current.style.transform = `translate3d(${posRef.current}px, 0, 0)`;
-      }
 
-      // Update blur/scale for each item
-      if (trackRef.current) {
         const children = trackRef.current.children;
         const containerCenter = window.innerWidth / 2;
 
@@ -61,20 +58,27 @@ export default function InfiniteCarousel({ images }: InfiniteCarouselProps) {
           const rect = child.getBoundingClientRect();
           const childCenter = rect.left + rect.width / 2;
           const distance = Math.abs(childCenter - containerCenter);
-          const maxDist = window.innerWidth * 0.6;
-          const normalized = Math.min(distance / maxDist, 1);
 
-          // Blur: 0 at center, up to 4px at edges
-          const blur = normalized * 4;
-          // Scale: 1 at center, 0.88 at edges
-          const scale = 1 - normalized * 0.12;
-          // Opacity: 1 at center, 0.5 at edges
-          const opacity = 1 - normalized * 0.5;
+          // ~2 images visible clearly, then blur kicks in
+          const clearZone = itemWidth * 1.8;
+          const normalized = Math.max(0, (distance - clearZone) / (window.innerWidth * 0.35));
+          const clamped = Math.min(normalized, 1);
+
+          // Blur: 0 in clear zone → 6px at edges
+          const blur = clamped * 6;
+          // Scale: 1 → 0.85 at edges
+          const scale = 1 - clamped * 0.15;
+          // Opacity: 1 → 0.3 at edges
+          const opacity = 1 - clamped * 0.7;
+          // Y offset: subtle arc — items curve down toward edges (10-15%)
+          const yOffset = clamped * clamped * 30; // px, quadratic for smooth curve
+          // Rotation: subtle tilt toward edges
+          const rotateY = clamped * 12 * (childCenter < containerCenter ? 1 : -1); // degrees
 
           const imgWrapper = child.querySelector("[data-carousel-img]") as HTMLElement;
           if (imgWrapper) {
             imgWrapper.style.filter = `blur(${blur}px)`;
-            imgWrapper.style.transform = `scale(${scale})`;
+            imgWrapper.style.transform = `scale(${scale}) translateY(${yOffset}px) perspective(800px) rotateY(${rotateY}deg)`;
             imgWrapper.style.opacity = `${opacity}`;
           }
         }
@@ -87,23 +91,23 @@ export default function InfiniteCarousel({ images }: InfiniteCarouselProps) {
     return () => cancelAnimationFrame(animRef.current);
   }, [itemWidth, singleSetWidth]);
 
-  if (!itemWidth) return <div className="h-[400px]" />;
-
-  const gap = 12;
+  if (!itemWidth) return <div className="h-[300px]" />;
 
   return (
-    <div className="relative overflow-hidden">
+    <div className="relative overflow-hidden py-8">
       {/* Edge fade masks */}
-      <div className="absolute left-0 top-0 bottom-0 w-16 md:w-32 z-10 pointer-events-none"
+      <div
+        className="absolute left-0 top-0 bottom-0 w-20 md:w-40 z-10 pointer-events-none"
         style={{ background: "linear-gradient(to right, #F5E6D3, transparent)" }}
       />
-      <div className="absolute right-0 top-0 bottom-0 w-16 md:w-32 z-10 pointer-events-none"
+      <div
+        className="absolute right-0 top-0 bottom-0 w-20 md:w-40 z-10 pointer-events-none"
         style={{ background: "linear-gradient(to left, #F5E6D3, transparent)" }}
       />
 
       <div
         ref={trackRef}
-        className="flex will-change-transform"
+        className="flex will-change-transform items-center"
         style={{ gap: `${gap}px` }}
       >
         {tripled.map((img, i) => (
@@ -114,8 +118,8 @@ export default function InfiniteCarousel({ images }: InfiniteCarouselProps) {
           >
             <div
               data-carousel-img
-              className="relative overflow-hidden transition-none"
-              style={{ aspectRatio: "4/5" }}
+              className="relative overflow-hidden rounded-sm"
+              style={{ aspectRatio: "3/4", transformOrigin: "center bottom" }}
             >
               <Image
                 src={img.src}
